@@ -6,7 +6,7 @@ const testimonials = [
   {
     name: "Priya Sharma",
     role: "Bride",
-    text: "Our wedding was magical thanks to Kikli Mala Events. Every detail was absolutely perfect and beyond our expectations.",
+    text: "Our wedding was magical thanks to text: "Our wedding was magical thanks to Jhilimili Events. Every detail was absolutely perfect and beyond our expectations.",. Every detail was absolutely perfect and beyond our expectations.",
   },
   {
     name: "Rajesh Thapa",

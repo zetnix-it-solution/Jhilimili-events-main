@@ -38,8 +38,7 @@ const Navbar = () => {
       <div className="container-custom flex items-center justify-between">
         <Link to="/" className="relative z-50">
           <span className="font-display text-2xl font-bold tracking-wider">
-            <span className={scrolled ? "text-primary" : "text-primary-foreground"}>Kikli</span>{" "}
-            <span className={scrolled ? "text-secondary" : "text-primary-foreground"}>Mala</span>
+            <span className={scrolled ? "text-primary" : "text-primary-foreground"}>Jhilimili</span>
           </span>
           <span className={`block text-xs tracking-[0.3em] uppercase ${scrolled ? "text-muted-foreground" : "text-primary-foreground/80"}`}>
             Events

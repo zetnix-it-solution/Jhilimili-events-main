@@ -28,7 +28,7 @@ const About = () => {
               <p className="font-display text-sm tracking-[0.3em] uppercase text-primary mb-3">Who We Are</p>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-6">Crafting Unforgettable Celebrations</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Kikli Mala Events specializes in creating unforgettable celebrations with unique themes and professional planning. Based in Kathmandu, Nepal, we have been transforming dreams into reality for couples, families, and corporations.
+                Jhilimili Events specializes in creating unforgettable celebrations with unique themes and professional planning. Based in Kathmandu, Nepal, we have been transforming dreams into reality for couples, families, and corporations. in creating unforgettable celebrations with unique themes and professional planning. Based in Kathmandu, Nepal, we have been transforming dreams into reality for couples, families, and corporations.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Our dedicated team of creative planners, designers, and coordinators work tirelessly to ensure every event is executed with precision, elegance, and a personal touch that makes each celebration truly one-of-a-kind.

@@ -15,7 +15,7 @@ const Footer = () => {
               Events
             </p>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Turning your dream events into beautiful memories. Nepal's premier event planning company.
+            Turning your dream events into beautiful memories. Nepal's premier event planning company.
             </p>
           </div>
 

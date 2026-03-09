@@ -9,14 +9,13 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <span className="font-display text-2xl font-bold tracking-wider">
-              <span className="text-primary">Kikli</span>{" "}
-              <span className="text-secondary">Mala</span>
+              <span className="text-primary">Jhilimili</span>
             </span>
             <p className="block text-xs tracking-[0.3em] uppercase text-primary-foreground/60 mb-4">
               Events
             </p>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Turning your dream events into beautiful memories. Nepal's premier event planning company.
+            Turning your dream events into beautiful memories. Nepal's premier event planning company.
             </p>
           </div>
 
@@ -79,7 +78,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center">
           <p className="text-primary-foreground/50 text-sm">
-            © {new Date().getFullYear()} Kikli Mala Events. All rights reserved.
+            © {new Date().getFullYear()} © {new Date().getFullYear()} Jhilimili Events. All rights reserved.
           </p>
         </div>
       </div>

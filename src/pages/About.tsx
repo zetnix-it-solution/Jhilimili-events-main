@@ -11,7 +11,7 @@ const About = () => {
         <div className="container-custom">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center">
             <p className="font-display text-sm tracking-[0.3em] uppercase text-secondary mb-3">Our Story</p>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground mb-6">About Kikli Mala Events</h1>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground mb-6"><h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground mb-6">About Jhilimili Events</h1></h1>
             <div className="w-20 h-0.5 gradient-primary mx-auto" />
           </motion.div>
         </div>
@@ -28,7 +28,7 @@ const About = () => {
               <p className="font-display text-sm tracking-[0.3em] uppercase text-primary mb-3">Who We Are</p>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-6">Crafting Unforgettable Celebrations</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Kikli Mala Events specializes in creating unforgettable celebrations with unique themes and professional planning. Based in Kathmandu, Nepal, we have been transforming dreams into reality for couples, families, and corporations.
+                Jhilimili Events specializes in creating unforgettable celebrations with unique themes and professional planning. Based in Kathmandu, Nepal, we have been transforming dreams into reality for couples, families, and corporations. in creating unforgettable celebrations with unique themes and professional planning. Based in Kathmandu, Nepal, we have been transforming dreams into reality for couples, families, and corporations.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Our dedicated team of creative planners, designers, and coordinators work tirelessly to ensure every event is executed with precision, elegance, and a personal touch that makes each celebration truly one-of-a-kind.

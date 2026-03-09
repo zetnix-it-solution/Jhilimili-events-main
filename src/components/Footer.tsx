@@ -9,8 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <span className="font-display text-2xl font-bold tracking-wider">
-              <span className="text-primary">Kikli</span>{" "}
-              <span className="text-secondary">Mala</span>
+              <span className="text-primary">Jhilimili</span>
             </span>
             <p className="block text-xs tracking-[0.3em] uppercase text-primary-foreground/60 mb-4">
               Events

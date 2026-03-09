@@ -2,18 +2,29 @@ import { Link } from "react-router-dom";
 import { Instagram, Facebook, Phone, Mail, MapPin } from "lucide-react";
 
 const Footer = () => {
+  const logoSrc = "/logo.jpg";
+
   return (
     <footer className="bg-foreground text-primary-foreground">
       <div className="container-custom py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <span className="font-display text-2xl font-bold tracking-wider">
-              <span className="text-primary">Jhilimili</span>
-            </span>
-            <p className="block text-xs tracking-[0.3em] uppercase text-primary-foreground/60 mb-4">
-              Events
-            </p>
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src={logoSrc}
+                alt="Jhilimili Events"
+                className="h-14 w-auto rounded-md object-contain"
+              />
+              <div className="leading-tight">
+                <span className="block font-display text-2xl font-bold tracking-wide text-primary">
+                  Jhilimili
+                </span>
+                <span className="block font-heading text-xs tracking-[0.24em] uppercase text-primary-foreground/60">
+                  Events
+                </span>
+              </div>
+            </div>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
             Turning your dream events into beautiful memories. Nepal's premier event planning company.
             </p>
@@ -78,7 +89,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center">
           <p className="text-primary-foreground/50 text-sm">
-            © {new Date().getFullYear()} © {new Date().getFullYear()} Jhilimili Events. All rights reserved.
+            © {new Date().getFullYear()} Jhilimili Events. All rights reserved.
           </p>
         </div>
       </div>

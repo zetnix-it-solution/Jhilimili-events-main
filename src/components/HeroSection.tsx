@@ -6,39 +6,40 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
         style={{ backgroundImage: `url(${heroImage})` }}
       />
-      <div className="absolute inset-0 bg-foreground/50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground/85 via-foreground/70 to-foreground/80" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(255,214,173,0.22),transparent_42%)]" />
 
-      <div className="relative z-20 text-center container-custom">
+      <div className="relative z-20 text-center container-custom pt-24 md:pt-28">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="font-display text-sm md:text-base tracking-[0.4em] uppercase text-accent mb-6"
+          className="inline-block px-4 py-2 rounded-full border border-primary-foreground/30 font-display text-xs md:text-sm tracking-[0.28em] uppercase text-accent mb-6 bg-primary-foreground/5"
         >
-          Premium Event Planning
+          Premium Event Planning in Nepal
         </motion.p>
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight mb-6"
+          className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] mb-6 max-w-4xl mx-auto"
         >
-          Turning Your Dream Events
+          Turning Dream Celebrations
           <br />
-          <span className="text-accent">Into Beautiful Memories</span>
+          <span className="text-accent">Into Timeless Memories</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto mb-10"
+          className="text-primary-foreground/85 text-lg md:text-xl max-w-3xl mx-auto mb-10"
         >
-          Nepal's premier event planning company crafting unforgettable celebrations with elegance and perfection.
+          From weddings to corporate galas, Jhilimili Events designs every detail with elegance, precision, and signature storytelling.
         </motion.p>
 
         <motion.div
@@ -54,24 +55,14 @@ const HeroSection = () => {
             Plan Your Event
           </Link>
           <Link
-            to="/portfolio"
-            className="border-2 border-primary-foreground/30 text-primary-foreground px-8 py-4 rounded-full text-lg font-medium hover:bg-primary-foreground/10 transition-colors"
+            to="/packages"
+            className="border-2 border-primary-foreground/35 text-primary-foreground px-8 py-4 rounded-full text-lg font-medium hover:bg-primary-foreground/10 transition-colors"
           >
-            View Portfolio
+            Explore Packages
           </Link>
         </motion.div>
-      </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-      >
-        <div className="w-6 h-10 border-2 border-primary-foreground/40 rounded-full flex justify-center pt-2">
-          <div className="w-1.5 h-3 bg-primary-foreground/60 rounded-full" />
-        </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

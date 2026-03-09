@@ -1,25 +1,28 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check, Star } from "lucide-react";
 
 const packages = [
   {
     name: "Basic",
-    price: "Starting from NPR 50,000",
-    features: ["Venue decoration", "Basic photography", "Event coordination", "Standard theme setup"],
+    price: "NPR 50,000",
+    bestFor: "Best for intimate celebrations and family gatherings",
+    features: ["Venue styling and decor setup", "Basic photography coverage", "On-day event coordination", "Standard themed concept"],
     popular: false,
   },
   {
     name: "Premium",
-    price: "Starting from NPR 1,50,000",
-    features: ["Complete decoration", "Professional photography & videography", "Venue management", "Custom theme design", "Planning support"],
+    price: "NPR 1,50,000",
+    bestFor: "Best for weddings and large celebrations with custom design",
+    features: ["Complete decor and floral styling", "Professional photo and video team", "Full venue management", "Custom concept and design", "Planning support from start to finish"],
     popular: true,
   },
   {
     name: "Luxury",
-    price: "Starting from NPR 3,00,000",
-    features: ["Premium decoration", "Cinematic photography & videography", "Full venue management", "Exclusive theme design", "End-to-end planning", "Post-event coordination"],
+    price: "NPR 3,00,000",
+    bestFor: "Best for destination and VIP events with white-glove support",
+    features: ["Luxury decor and styling direction", "Cinematic photography and films", "Dedicated venue and logistics team", "Bespoke concept development", "End-to-end planning and concierge", "Post-event coordination"],
     popular: false,
   },
 ];
@@ -49,25 +52,30 @@ const PackagesPreview = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.15 }}
-              className={`rounded-xl p-8 relative ${
+              className={`rounded-2xl p-8 relative ${
                 pkg.popular
-                  ? "gradient-primary text-primary-foreground shadow-2xl scale-105"
+                  ? "gradient-primary text-primary-foreground shadow-2xl scale-[1.03]"
                   : "bg-card shadow-lg border border-border"
               }`}
             >
               {pkg.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground px-4 py-1 rounded-full text-xs font-semibold">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground px-4 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                  <Star size={12} fill="currentColor" />
                   Most Popular
                 </span>
               )}
-              <h3 className="font-heading text-2xl font-bold mb-2">{pkg.name}</h3>
-              <p className={`text-sm mb-6 ${pkg.popular ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
-                {pkg.price}
+              <h3 className="font-heading text-2xl font-bold mb-2">{pkg.name} Package</h3>
+              <p className={`text-xs uppercase tracking-[0.2em] mb-2 ${pkg.popular ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                Starting from
+              </p>
+              <p className="font-display text-2xl mb-4">{pkg.price}</p>
+              <p className={`text-sm mb-6 ${pkg.popular ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
+                {pkg.bestFor}
               </p>
               <ul className="space-y-3 mb-8">
                 {pkg.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm">
-                    <Check size={16} className={pkg.popular ? "text-accent" : "text-secondary"} />
+                  <li key={f} className="flex items-start gap-2 text-sm leading-relaxed">
+                    <Check size={16} className={`mt-0.5 shrink-0 ${pkg.popular ? "text-accent" : "text-secondary"}`} />
                     {f}
                   </li>
                 ))}
@@ -80,7 +88,7 @@ const PackagesPreview = () => {
                     : "gradient-primary text-primary-foreground"
                 }`}
               >
-                Book Consultation
+                Get Proposal
               </Link>
             </motion.div>
           ))}

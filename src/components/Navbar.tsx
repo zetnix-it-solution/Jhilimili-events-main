@@ -16,6 +16,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const logoSrc = "/logo.jpg";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -27,22 +28,53 @@ const Navbar = () => {
     setIsOpen(false);
   }, [location]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ease-in-out ${
         scrolled
-          ? "bg-card/95 backdrop-blur-md shadow-lg py-3"
-          : "bg-transparent py-5"
+          ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+          : "bg-transparent"
       }`}
+      style={{
+        paddingTop: scrolled ? "0.75rem" : "1.25rem",
+        paddingBottom: scrolled ? "0.75rem" : "1.25rem",
+      }}
     >
       <div className="container-custom flex items-center justify-between">
-        <Link to="/" className="relative z-50">
-          <span className="font-display text-2xl font-bold tracking-wider">
-            <span className={scrolled ? "text-primary" : "text-primary-foreground"}>Jhilimili</span>
-          </span>
-          <span className={`block text-xs tracking-[0.3em] uppercase ${scrolled ? "text-muted-foreground" : "text-primary-foreground/80"}`}>
-            Events
-          </span>
+        <Link to="/" className="relative z-10 flex items-center gap-3">
+          <img
+            src={logoSrc}
+            alt="Jhilimili Events"
+            className="h-12 w-auto rounded-md object-contain shadow-sm"
+          />
+          <div className="leading-tight">
+            <span
+              className={`block font-display text-xl md:text-2xl font-bold tracking-wide transition-colors duration-300 ${
+                scrolled ? "text-primary" : "text-white drop-shadow-lg"
+              }`}
+            >
+              Jhilimili
+            </span>
+            <span
+              className={`block font-heading text-[10px] md:text-xs tracking-[0.24em] uppercase transition-colors duration-300 ${
+                scrolled ? "text-muted-foreground" : "text-white/90 drop-shadow-md"
+              }`}
+            >
+              Events
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}
@@ -51,10 +83,10 @@ const Navbar = () => {
             <Link
               key={link.path}
               to={link.path}
-              className={`text-sm font-medium tracking-wide transition-colors duration-200 hover:text-primary ${
+              className={`text-sm font-medium tracking-wide transition-colors duration-300 ${
                 location.pathname === link.path
                   ? scrolled ? "text-primary" : "text-accent"
-                  : scrolled ? "text-foreground" : "text-primary-foreground"
+                  : scrolled ? "text-foreground hover:text-primary" : "text-white/90 hover:text-white drop-shadow-md"
               }`}
             >
               {link.label}
@@ -62,7 +94,7 @@ const Navbar = () => {
           ))}
           <Link
             to="/contact"
-            className="gradient-primary text-primary-foreground px-6 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+            className="gradient-primary text-white px-6 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition-all duration-300 shadow-lg"
           >
             Plan Your Event
           </Link>
@@ -71,54 +103,83 @@ const Navbar = () => {
         {/* Mobile Toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`lg:hidden relative z-50 p-2 ${
-            isOpen || scrolled ? "text-foreground" : "text-primary-foreground"
+          className={`lg:hidden relative z-10 p-2 transition-colors duration-300 ${
+            scrolled ? "text-foreground" : "text-white drop-shadow-lg"
           }`}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{ opacity: 0, x: "100%" }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: "100%" }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-card z-40 flex flex-col items-center justify-center gap-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="fixed top-0 left-0 w-full h-screen bg-white z-[2000] lg:hidden"
             >
-              {navLinks.map((link, i) => (
+              {/* Close Button */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-[25px] right-[25px] p-2 text-foreground hover:text-primary transition-colors duration-200 z-10"
+                aria-label="Close menu"
+              >
+                <X size={28} />
+              </button>
+
+              {/* Menu Content */}
+              <div className="flex flex-col items-center justify-center h-full gap-6">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.path}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ 
+                      delay: i * 0.1,
+                      duration: 0.3,
+                      ease: "easeOut"
+                    }}
+                  >
+                    <Link
+                      to={link.path}
+                      className={`text-3xl font-display font-medium transition-colors duration-200 ${
+                        location.pathname === link.path
+                          ? "text-[#C2187A]"
+                          : "text-[#1A1A1A] hover:text-[#1BA6B2]"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                
+                {/* CTA Button */}
                 <motion.div
-                  key={link.path}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ 
+                    delay: 0.6,
+                    duration: 0.3,
+                    ease: "easeOut"
+                  }}
+                  className="mt-4"
                 >
                   <Link
-                    to={link.path}
-                    className={`text-2xl font-heading font-medium ${
-                      location.pathname === link.path
-                        ? "text-primary"
-                        : "text-foreground"
-                    }`}
+                    to="/contact"
+                    className="inline-block px-8 py-3.5 rounded-full text-lg font-medium text-white hover:opacity-90 transition-opacity duration-200"
+                    style={{
+                      background: "linear-gradient(135deg, #C2187A, #1BA6B2)"
+                    }}
                   >
-                    {link.label}
+                    Plan Your Event
                   </Link>
                 </motion.div>
-              ))}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <Link
-                  to="/contact"
-                  className="gradient-primary text-primary-foreground px-8 py-3 rounded-full text-lg font-medium"
-                >
-                  Plan Your Event
-                </Link>
-              </motion.div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

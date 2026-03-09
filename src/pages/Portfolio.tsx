@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
@@ -33,9 +33,35 @@ const categories: Category[] = ["All", "Wedding", "Corporate", "Birthday", "Deco
 
 const Portfolio = () => {
   const [activeCategory, setActiveCategory] = useState<Category>("All");
-  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filtered = activeCategory === "All" ? allImages : allImages.filter((img) => img.category === activeCategory);
+  const selectedImage = lightboxIndex !== null ? filtered[lightboxIndex] : null;
+
+  useEffect(() => {
+    setLightboxIndex(null);
+  }, [activeCategory]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setLightboxIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const showPrevious = () => {
+    if (lightboxIndex === null || filtered.length === 0) return;
+    setLightboxIndex((lightboxIndex - 1 + filtered.length) % filtered.length);
+  };
+
+  const showNext = () => {
+    if (lightboxIndex === null || filtered.length === 0) return;
+    setLightboxIndex((lightboxIndex + 1) % filtered.length);
+  };
 
   return (
     <>
@@ -59,11 +85,11 @@ const Portfolio = () => {
                 onClick={() => setActiveCategory(cat)}
                 className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
                   activeCategory === cat
-                    ? "gradient-primary text-primary-foreground"
+                    ? "gradient-primary text-primary-foreground shadow-md"
                     : "bg-muted text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {cat}
+                {cat} <span className="opacity-75">({cat === "All" ? allImages.length : allImages.filter((img) => img.category === cat).length})</span>
               </button>
             ))}
           </div>
@@ -79,7 +105,7 @@ const Portfolio = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 className="image-hover-zoom rounded-lg overflow-hidden cursor-pointer"
-                onClick={() => setLightbox(img.src)}
+                onClick={() => setLightboxIndex(i)}
               >
                 <img src={img.src} alt={img.alt} className="w-full h-52 md:h-64 object-cover" loading="lazy" />
               </motion.div>
@@ -89,17 +115,43 @@ const Portfolio = () => {
       </section>
 
       {/* Lightbox */}
-      {lightbox && (
+      {selectedImage && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="fixed inset-0 z-[100] bg-foreground/90 flex items-center justify-center p-4"
-          onClick={() => setLightbox(null)}
+          onClick={() => setLightboxIndex(null)}
         >
-          <button className="absolute top-6 right-6 text-primary-foreground" onClick={() => setLightbox(null)}>
+          <button className="absolute top-6 right-6 text-primary-foreground" onClick={() => setLightboxIndex(null)}>
             <X size={32} />
           </button>
-          <img src={lightbox} alt="Gallery preview" className="max-w-full max-h-[90vh] object-contain rounded-lg" />
+
+          <button
+            className="absolute left-4 md:left-8 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+            onClick={(event) => {
+              event.stopPropagation();
+              showPrevious();
+            }}
+            aria-label="Previous image"
+          >
+            <ChevronLeft size={34} />
+          </button>
+
+          <div className="max-w-6xl w-full flex flex-col items-center gap-4" onClick={(event) => event.stopPropagation()}>
+            <img src={selectedImage.src} alt={selectedImage.alt} className="max-w-full max-h-[80vh] object-contain rounded-lg" />
+            <p className="text-primary-foreground/80 text-sm md:text-base">{selectedImage.alt}</p>
+          </div>
+
+          <button
+            className="absolute right-4 md:right-8 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+            onClick={(event) => {
+              event.stopPropagation();
+              showNext();
+            }}
+            aria-label="Next image"
+          >
+            <ChevronRight size={34} />
+          </button>
         </motion.div>
       )}
     </>

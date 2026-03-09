@@ -11,7 +11,7 @@ const About = () => {
         <div className="container-custom">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-center">
             <p className="font-display text-sm tracking-[0.3em] uppercase text-secondary mb-3">Our Story</p>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground mb-6">About Kikli Mala Events</h1>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground mb-6"><h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground mb-6">About Jhilimili Events</h1></h1>
             <div className="w-20 h-0.5 gradient-primary mx-auto" />
           </motion.div>
         </div>

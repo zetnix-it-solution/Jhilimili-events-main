@@ -155,7 +155,7 @@ const Contact = () => {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="title="Jhilimili Events Location""
+                  title="Jhilimili Events Location"
                 />
               </div>
             </motion.div>

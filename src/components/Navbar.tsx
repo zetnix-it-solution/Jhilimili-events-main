@@ -8,7 +8,6 @@ const navLinks = [
   { label: "About", path: "/about" },
   { label: "Services", path: "/services" },
   { label: "Portfolio", path: "/portfolio" },
-  { label: "Packages", path: "/packages" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -40,16 +39,18 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
+  const isHomePage = location.pathname === "/";
+  const showSolidNav = scrolled || !isHomePage;
+
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ease-in-out ${
-        scrolled
-          ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-          : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ease-in-out ${showSolidNav
+        ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+        : "bg-transparent"
+        }`}
       style={{
-        paddingTop: scrolled ? "0.75rem" : "1.25rem",
-        paddingBottom: scrolled ? "0.75rem" : "1.25rem",
+        paddingTop: showSolidNav ? "0.75rem" : "1.25rem",
+        paddingBottom: showSolidNav ? "0.75rem" : "1.25rem",
       }}
     >
       <div className="container-custom flex items-center justify-between">
@@ -61,16 +62,14 @@ const Navbar = () => {
           />
           <div className="leading-tight">
             <span
-              className={`block font-display text-xl md:text-2xl font-bold tracking-wide transition-colors duration-300 ${
-                scrolled ? "text-primary" : "text-white drop-shadow-lg"
-              }`}
+              className={`block font-display text-xl md:text-2xl font-bold tracking-wide transition-colors duration-300 ${showSolidNav ? "text-primary" : "text-white drop-shadow-lg"
+                }`}
             >
               Jhilimili
             </span>
             <span
-              className={`block font-heading text-[10px] md:text-xs tracking-[0.24em] uppercase transition-colors duration-300 ${
-                scrolled ? "text-muted-foreground" : "text-white/90 drop-shadow-md"
-              }`}
+              className={`block font-heading text-[10px] md:text-xs tracking-[0.24em] uppercase transition-colors duration-300 ${showSolidNav ? "text-muted-foreground" : "text-white/90 drop-shadow-md"
+                }`}
             >
               Events
             </span>
@@ -78,34 +77,47 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={`text-sm font-medium tracking-wide transition-colors duration-300 ${
-                location.pathname === link.path
-                  ? scrolled ? "text-primary" : "text-accent"
-                  : scrolled ? "text-foreground hover:text-primary" : "text-white/90 hover:text-white drop-shadow-md"
-              }`}
+              className={`group relative text-sm font-medium tracking-wide transition-all duration-300 hover:scale-105 py-1 ${location.pathname === link.path
+                ? showSolidNav ? "text-primary" : "text-accent"
+                : showSolidNav ? "text-foreground hover:text-primary" : "text-white/90 hover:text-white drop-shadow-md"
+                }`}
             >
               {link.label}
+              <span className={`absolute left-0 -bottom-0.5 h-[2px] rounded-full transition-all duration-300 ${location.pathname === link.path
+                ? "w-full gradient-primary"
+                : showSolidNav ? "w-0 group-hover:w-full bg-primary" : "w-0 group-hover:w-full bg-white"
+                }`} />
             </Link>
           ))}
-          <Link
-            to="/contact"
-            className="gradient-primary text-white px-6 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition-all duration-300 shadow-lg"
-          >
-            Plan Your Event
-          </Link>
+          <div className="flex items-center gap-3 ml-2">
+            <Link
+              to="/decorations"
+              className="gradient-primary text-white px-5 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-all duration-300 shadow-md"
+            >
+              Plan Your Event
+            </Link>
+            <Link
+              to="/contact"
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${showSolidNav
+                ? "border-primary text-primary hover:bg-primary hover:text-white"
+                : "border-white/50 text-white hover:bg-white hover:text-primary"
+                }`}
+            >
+              Custom Request
+            </Link>
+          </div>
         </div>
 
         {/* Mobile Toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`lg:hidden relative z-10 p-2 transition-colors duration-300 ${
-            scrolled ? "text-foreground" : "text-white drop-shadow-lg"
-          }`}
+          className={`lg:hidden relative z-10 p-2 transition-colors duration-300 ${showSolidNav ? "text-foreground" : "text-white drop-shadow-lg"
+            }`}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -138,7 +150,7 @@ const Navbar = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    transition={{ 
+                    transition={{
                       delay: i * 0.1,
                       duration: 0.3,
                       ease: "easeOut"
@@ -146,37 +158,42 @@ const Navbar = () => {
                   >
                     <Link
                       to={link.path}
-                      className={`text-3xl font-display font-medium transition-colors duration-200 ${
-                        location.pathname === link.path
-                          ? "text-[#C2187A]"
-                          : "text-[#1A1A1A] hover:text-[#1BA6B2]"
-                      }`}
+                      className={`text-3xl font-display font-medium transition-colors duration-200 ${location.pathname === link.path
+                        ? "text-[#C2187A]"
+                        : "text-[#1A1A1A] hover:text-[#1BA6B2]"
+                        }`}
                     >
                       {link.label}
                     </Link>
                   </motion.div>
                 ))}
-                
-                {/* CTA Button */}
+
+                {/* CTA Buttons */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
-                  transition={{ 
+                  transition={{
                     delay: 0.6,
                     duration: 0.3,
                     ease: "easeOut"
                   }}
-                  className="mt-4"
+                  className="mt-4 flex flex-col gap-4 w-full px-10"
                 >
                   <Link
-                    to="/contact"
-                    className="inline-block px-8 py-3.5 rounded-full text-lg font-medium text-white hover:opacity-90 transition-opacity duration-200"
+                    to="/decorations"
+                    className="w-full text-center px-8 py-3.5 rounded-full text-lg font-medium text-white hover:opacity-90 transition-opacity duration-200"
                     style={{
                       background: "linear-gradient(135deg, #C2187A, #1BA6B2)"
                     }}
                   >
                     Plan Your Event
+                  </Link>
+                  <Link
+                    to="/contact"
+                    className="w-full text-center px-8 py-3.5 rounded-full text-lg font-medium border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200"
+                  >
+                    Custom Request
                   </Link>
                 </motion.div>
               </div>

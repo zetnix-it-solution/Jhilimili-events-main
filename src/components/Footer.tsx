@@ -26,7 +26,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
-            Turning your dream events into beautiful memories. Nepal's premier event planning company.
+              Turning your dream events into beautiful memories. Nepal's premier event planning company.
             </p>
           </div>
 
@@ -34,7 +34,7 @@ const Footer = () => {
           <div>
             <h4 className="font-heading text-lg font-semibold mb-4 text-accent">Quick Links</h4>
             <ul className="space-y-2">
-              {["Home", "About", "Services", "Portfolio", "Packages", "Contact"].map((link) => (
+              {["Home", "About", "Services", "Portfolio", "Contact"].map((link) => (
                 <li key={link}>
                   <Link
                     to={link === "Home" ? "/" : `/${link.toLowerCase()}`}

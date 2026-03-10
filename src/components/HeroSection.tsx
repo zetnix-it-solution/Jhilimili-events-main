@@ -17,16 +17,16 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="inline-block px-4 py-2 rounded-full border border-primary-foreground/30 font-display text-xs md:text-sm tracking-[0.28em] uppercase text-accent mb-6 bg-primary-foreground/5"
+          className="inline-block px-4 py-2 rounded-full border border-primary-foreground/30 font-display text-xs md:text-sm tracking-[0.28em] uppercase text-accent mb-6 bg-primary-foreground/5 shadow-sm"
         >
           Premium Event Planning in Nepal
         </motion.p>
 
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] mb-6 max-w-4xl mx-auto"
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] mb-6 max-w-4xl mx-auto drop-shadow-lg"
         >
           Turning Dream Celebrations
           <br />
@@ -37,7 +37,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="text-primary-foreground/85 text-lg md:text-xl max-w-3xl mx-auto mb-10"
+          className="text-primary-foreground/85 text-lg md:text-xl max-w-3xl mx-auto mb-10 drop-shadow-md"
         >
           From weddings to corporate galas, Jhilimili Events designs every detail with elegance, precision, and signature storytelling.
         </motion.p>
@@ -49,16 +49,16 @@ const HeroSection = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Link
-            to="/contact"
-            className="gradient-primary text-primary-foreground px-8 py-4 rounded-full text-lg font-medium hover:opacity-90 transition-opacity shadow-lg"
+            to="/decorations"
+            className="gradient-primary text-primary-foreground px-8 py-4 rounded-full text-lg font-medium hover:opacity-90 hover:scale-105 transition-all shadow-lg"
           >
             Plan Your Event
           </Link>
           <Link
-            to="/packages"
-            className="border-2 border-primary-foreground/35 text-primary-foreground px-8 py-4 rounded-full text-lg font-medium hover:bg-primary-foreground/10 transition-colors"
+            to="/contact"
+            className="border-2 border-primary-foreground/35 text-primary-foreground px-8 py-4 rounded-full text-lg font-medium hover:bg-primary-foreground/10 hover:scale-105 transition-all shadow-md"
           >
-            Explore Packages
+            Custom Request
           </Link>
         </motion.div>
 

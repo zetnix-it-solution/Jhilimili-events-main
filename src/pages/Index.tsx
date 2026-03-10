@@ -3,7 +3,6 @@ import ServicesPreview from "@/components/ServicesPreview";
 import PortfolioPreview from "@/components/PortfolioPreview";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Testimonials from "@/components/Testimonials";
-import PackagesPreview from "@/components/PackagesPreview";
 import ContactCTA from "@/components/ContactCTA";
 
 const Index = () => {
@@ -14,7 +13,6 @@ const Index = () => {
       <PortfolioPreview />
       <WhyChooseUs />
       <Testimonials />
-      <PackagesPreview />
       <ContactCTA />
     </>
   );

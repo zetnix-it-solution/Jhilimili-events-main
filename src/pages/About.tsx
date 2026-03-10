@@ -55,8 +55,8 @@ const About = () => {
                 transition={{ delay: i * 0.15 }}
                 className="bg-card p-8 rounded-xl shadow-md text-center"
               >
-                <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-5">
-                  <item.icon className="text-primary-foreground" size={28} />
+                <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-5">
+                  <item.icon className="text-foreground/70" size={26} />
                 </div>
                 <h3 className="font-heading text-xl font-semibold text-foreground mb-3">{item.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{item.text}</p>

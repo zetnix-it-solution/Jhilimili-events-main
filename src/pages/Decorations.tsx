@@ -1,41 +1,40 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, ShoppingBag, X, Check, ArrowRight } from "lucide-react";
+import { ShoppingCart, ShoppingBag, X, Check, ArrowRight, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { categories, decorationItems, DecorationCategory, DecorationItem } from "@/data/decorations";
-import { useToast } from "@/components/ui/use-toast";
+import { categories, decorationItems, DecorationCategory } from "@/data/decorations";
+import { useCart } from "@/contexts/CartContext";
+
+interface CustomerDetails {
+    name: string;
+    phone: string;
+    email: string;
+    eventType: string;
+    eventDate: string;
+}
 
 const Decorations = () => {
     const [activeCategory, setActiveCategory] = useState<DecorationCategory>("All");
-    const [cart, setCart] = useState<DecorationItem[]>([]);
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const { toast } = useToast();
+    const { cart, addToCart, removeFromCart, isCartOpen, setIsCartOpen } = useCart();
+    const [cartStep, setCartStep] = useState<"cart" | "form">("cart");
+    const [customerDetails, setCustomerDetails] = useState<CustomerDetails>({
+        name: "", phone: "", email: "", eventType: "", eventDate: ""
+    });
     const navigate = useNavigate();
 
     const filteredItems = activeCategory === "All"
         ? decorationItems
         : decorationItems.filter((img) => img.category === activeCategory);
 
-    const addToCart = (item: DecorationItem) => {
-        if (!cart.find(c => c.id === item.id)) {
-            setCart([...cart, item]);
-            toast({
-                title: "Added to Cart",
-                description: `${item.code} has been added to your quotation request.`,
-            });
-        }
-    };
-
-    const removeFromCart = (id: string) => {
-        setCart(cart.filter(item => item.id !== id));
-    };
-
     const handleRequestQuotation = () => {
-        // Navigate to contact and maybe pass cart data via state or localStorage
-        // For now we'll store in sessionStorage so contact page could potentially read it
-        sessionStorage.setItem("jhilimili_cart", JSON.stringify(cart));
+        setCartStep("form");
+    };
+
+    const handleFormSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        sessionStorage.setItem("jhilimili_customer", JSON.stringify(customerDetails));
         setIsCartOpen(false);
-        navigate("/contact?subject=Quotation Request");
+        navigate("/quotation");
     };
 
     return (
@@ -120,9 +119,9 @@ const Decorations = () => {
                                         {cart.find(c => c.id === item.id) ? (
                                             <button
                                                 disabled
-                                                className="w-full py-2.5 rounded-md text-sm font-medium bg-green-50 text-green-700 border border-green-200 flex items-center justify-center gap-2 transition-colors"
+                                                className="w-full py-2.5 rounded-md text-sm font-medium bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] flex items-center justify-center gap-2 transition-colors cursor-default"
                                             >
-                                                <Check size={16} /> Added
+                                                <Check size={16} strokeWidth={2.5} /> Added
                                             </button>
                                         ) : (
                                             <button
@@ -145,26 +144,6 @@ const Decorations = () => {
                 </motion.div>
             </div>
 
-            {/* Floating Cart Button */}
-            <AnimatePresence>
-                {cart.length > 0 && (
-                    <motion.button
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        onClick={() => setIsCartOpen(true)}
-                        className="fixed bottom-24 right-6 z-50 bg-foreground text-background p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center"
-                    >
-                        <div className="relative">
-                            <ShoppingBag size={24} />
-                            <span className="absolute -top-2 -right-2 bg-[#D9A05B] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                                {cart.length}
-                            </span>
-                        </div>
-                    </motion.button>
-                )}
-            </AnimatePresence>
-
             {/* Cart Drawer */}
             <AnimatePresence>
                 {isCartOpen && (
@@ -185,10 +164,20 @@ const Decorations = () => {
                         >
                             <div className="p-6 border-b border-border flex items-center justify-between bg-slate-50">
                                 <h2 className="font-heading font-bold text-xl flex items-center gap-2">
-                                    <ShoppingBag className="text-[#D9A05B]" /> My Quotation Cart
+                                    {cartStep === "form" ? (
+                                        <button onClick={() => setCartStep("cart")} className="mr-2 hover:bg-slate-200 p-1 rounded-full transition-colors">
+                                            <ArrowLeft size={20} />
+                                        </button>
+                                    ) : (
+                                        <ShoppingBag className="text-[#D9A05B]" />
+                                    )}
+                                    {cartStep === "form" ? "Your Details" : "My Quotation Cart"}
                                 </h2>
                                 <button
-                                    onClick={() => setIsCartOpen(false)}
+                                    onClick={() => {
+                                        setIsCartOpen(false);
+                                        setTimeout(() => setCartStep("cart"), 300); // Reset step after closing animation
+                                    }}
                                     className="p-2 hover:bg-slate-200 rounded-full transition-colors"
                                 >
                                     <X size={20} />
@@ -196,58 +185,134 @@ const Decorations = () => {
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-6">
-                                {cart.length === 0 ? (
-                                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
-                                        <ShoppingCart size={48} className="text-secondary/50" />
-                                        <p>Your quotation cart is empty.</p>
-                                        <button
-                                            onClick={() => setIsCartOpen(false)}
-                                            className="text-[#D9A05B] font-medium mt-2 hover:underline"
-                                        >
-                                            Browse Decorations
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col gap-4">
-                                        {cart.map((item) => (
-                                            <motion.div
-                                                layout
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, scale: 0.95 }}
-                                                key={item.id}
-                                                className="flex gap-4 p-3 border border-border rounded-lg bg-card items-center"
+                                {cartStep === "cart" ? (
+                                    cart.length === 0 ? (
+                                        <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
+                                            <ShoppingCart size={48} className="text-secondary/50" />
+                                            <p>Your quotation cart is empty.</p>
+                                            <button
+                                                onClick={() => setIsCartOpen(false)}
+                                                className="text-[#D9A05B] font-medium mt-2 hover:underline"
                                             >
-                                                <img src={item.image} alt={item.code} className="w-20 h-20 object-cover rounded-md" />
-                                                <div className="flex-1">
-                                                    <h4 className="font-bold text-foreground">{item.code}</h4>
-                                                    <p className="text-xs text-muted-foreground">{item.category}</p>
-                                                </div>
-                                                <button
-                                                    onClick={() => removeFromCart(item.id)}
-                                                    className="p-2 text-destructive hover:bg-destructive/10 rounded-full transition-colors"
-                                                    aria-label="Remove item"
+                                                Browse Decorations
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-4">
+                                            {cart.map((item) => (
+                                                <motion.div
+                                                    layout
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, scale: 0.95 }}
+                                                    key={item.id}
+                                                    className="flex gap-4 p-3 border border-border rounded-lg bg-card items-center"
                                                 >
-                                                    <X size={16} />
-                                                </button>
-                                            </motion.div>
-                                        ))}
-                                    </div>
+                                                    <img src={item.image} alt={item.code} className="w-20 h-20 object-cover rounded-md" />
+                                                    <div className="flex-1">
+                                                        <h4 className="font-bold text-foreground">{item.code}</h4>
+                                                        <p className="text-xs text-muted-foreground">{item.category}</p>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => removeFromCart(item.id)}
+                                                        className="p-2 text-destructive hover:bg-destructive/10 rounded-full transition-colors"
+                                                        aria-label="Remove item"
+                                                    >
+                                                        <X size={16} />
+                                                    </button>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    )
+                                ) : (
+                                    <form id="quotation-form" onSubmit={handleFormSubmit} className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-foreground mb-1">Name *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={customerDetails.name}
+                                                onChange={(e) => setCustomerDetails({ ...customerDetails, name: e.target.value })}
+                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-[#D9A05B]"
+                                                placeholder="Your Full Name"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-foreground mb-1">Phone *</label>
+                                            <input
+                                                type="tel"
+                                                required
+                                                value={customerDetails.phone}
+                                                onChange={(e) => setCustomerDetails({ ...customerDetails, phone: e.target.value })}
+                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-[#D9A05B]"
+                                                placeholder="Your Phone Number"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-foreground mb-1">Email</label>
+                                            <input
+                                                type="email"
+                                                value={customerDetails.email}
+                                                onChange={(e) => setCustomerDetails({ ...customerDetails, email: e.target.value })}
+                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-[#D9A05B]"
+                                                placeholder="Your Email Address"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-foreground mb-1">Event Type *</label>
+                                            <select
+                                                required
+                                                value={customerDetails.eventType}
+                                                onChange={(e) => setCustomerDetails({ ...customerDetails, eventType: e.target.value })}
+                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-[#D9A05B]"
+                                            >
+                                                <option value="" disabled>Select event type</option>
+                                                <option value="Wedding">Wedding</option>
+                                                <option value="Engagement">Engagement</option>
+                                                <option value="Birthday">Birthday</option>
+                                                <option value="Anniversary">Anniversary</option>
+                                                <option value="Corporate">Corporate</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-foreground mb-1">Event Date *</label>
+                                            <input
+                                                type="date"
+                                                required
+                                                value={customerDetails.eventDate}
+                                                onChange={(e) => setCustomerDetails({ ...customerDetails, eventDate: e.target.value })}
+                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-[#D9A05B]"
+                                            />
+                                        </div>
+                                    </form>
                                 )}
                             </div>
 
                             <div className="p-6 border-t border-border bg-slate-50">
-                                <div className="flex justify-between items-center mb-4 text-sm font-medium text-muted-foreground">
-                                    <span>Total Items:</span>
-                                    <span className="text-foreground">{cart.length}</span>
-                                </div>
-                                <button
-                                    disabled={cart.length === 0}
-                                    onClick={handleRequestQuotation}
-                                    className="w-full py-4 rounded-md text-white font-medium bg-[#D9A05B] hover:bg-[#c28f51] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 transition-colors shadow-md"
-                                >
-                                    Request Custom Quotation <ArrowRight size={18} />
-                                </button>
+                                {cartStep === "cart" ? (
+                                    <>
+                                        <div className="flex justify-between items-center mb-4 text-sm font-medium text-muted-foreground">
+                                            <span>Total Items:</span>
+                                            <span className="text-foreground">{cart.length}</span>
+                                        </div>
+                                        <button
+                                            disabled={cart.length === 0}
+                                            onClick={handleRequestQuotation}
+                                            className="w-full py-4 rounded-md text-white font-medium bg-[#D9A05B] hover:bg-[#c28f51] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 transition-colors shadow-md"
+                                        >
+                                            Request Custom Quotation <ArrowRight size={18} />
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        type="submit"
+                                        form="quotation-form"
+                                        className="w-full py-4 rounded-md text-white font-medium bg-[#D9A05B] hover:bg-[#c28f51] flex justify-center items-center gap-2 transition-colors shadow-md"
+                                    >
+                                        Generate Quotation <ArrowRight size={18} />
+                                    </button>
+                                )}
                             </div>
                         </motion.div>
                     </>

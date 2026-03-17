@@ -44,7 +44,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ease-in-out ${showSolidNav
+      className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ease-in-out print:hidden ${showSolidNav
         ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
         : "bg-transparent"
         }`}

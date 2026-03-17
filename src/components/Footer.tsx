@@ -5,7 +5,7 @@ const Footer = () => {
   const logoSrc = "/logo.jpg";
 
   return (
-    <footer className="bg-foreground text-primary-foreground">
+    <footer className="bg-foreground text-primary-foreground print:hidden">
       <div className="container-custom py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}

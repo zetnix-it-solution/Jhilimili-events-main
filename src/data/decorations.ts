@@ -11,7 +11,16 @@ export interface DecorationItem {
     code: string;
     category: DecorationCategory;
     image: string;
+    preference?: "Indoor" | "Outdoor";
+    addons?: string[];
 }
+
+export const addonOptions = [
+    { id: "sofa", label: "Sofa", icon: "sofa" },
+    { id: "chair", label: "Chair", icon: "chair" },
+    { id: "hawan", label: "Hawan", icon: "flame" },
+    { id: "jhoomar", label: "Jhoomar", icon: "flame" },
+];
 
 // using Unsplash placeholders for now, in a real scenario we'd use actual assets.
 export const decorationItems: DecorationItem[] = [

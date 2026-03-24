@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Printer, MessageCircle, ArrowLeft, Calendar, User, Phone, Mail, Tag } from "lucide-react";
-import { DecorationItem } from "@/data/decorations";
+import { DecorationItem, addonOptions } from "@/data/decorations";
+import { CartItem } from "@/contexts/CartContext";
 
 interface CustomerDetails {
     name: string;
@@ -14,7 +15,7 @@ interface CustomerDetails {
 
 const Quotation = () => {
     const navigate = useNavigate();
-    const [cart, setCart] = useState<DecorationItem[]>([]);
+    const [cart, setCart] = useState<CartItem[]>([]);
     const [customer, setCustomer] = useState<CustomerDetails | null>(null);
 
     useEffect(() => {
@@ -38,7 +39,15 @@ const Quotation = () => {
     const handleWhatsApp = () => {
         if (!customer || cart.length === 0) return;
 
-        const cartItemsText = cart.map(item => `- ${item.category}: ${item.code}`).join('%0A');
+        const cartItemsText = cart.map(item => {
+            let spec = `- ${item.category}: ${item.code}`;
+            if (item.preference) spec += ` (${item.preference})`;
+            if (item.addons && item.addons.length > 0) {
+                const addonsStr = item.addons.map(id => addonOptions.find(a => a.id === id)?.label || id).join(', ');
+                spec += ` [Add-ons: ${addonsStr}]`;
+            }
+            return spec;
+        }).join('%0A');
         
         const message = `*New Quotation Request*%0A%0A*Customer Details:*%0AName: ${customer.name}%0APhone: ${customer.phone}%0AEmail: ${customer.email || "N/A"}%0AEvent Type: ${customer.eventType}%0AEvent Date: ${customer.eventDate}%0A%0A*Requested Items:*%0A${cartItemsText}%0A%0APlease provide a quotation for the above items.`;
 
@@ -65,13 +74,13 @@ const Quotation = () => {
                     <div className="flex gap-4">
                         <button
                             onClick={handlePrint}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-md text-foreground shadow-sm hover:bg-slate-50 transition-colors"
+                            className="flex items-center gap-2 px-6 py-2 bg-white border border-border rounded-full text-foreground shadow-sm hover:bg-slate-50 transition-all hover:scale-105 active:scale-95"
                         >
                             <Printer size={18} /> Print Quotation
                         </button>
                         <button
                             onClick={handleWhatsApp}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-md shadow-sm hover:bg-[#20bd5a] transition-colors"
+                            className="flex items-center gap-2 px-6 py-2 bg-[#25D366] text-white rounded-full shadow-sm hover:bg-[#20bd5a] transition-all hover:scale-105 active:scale-95"
                         >
                             <MessageCircle size={18} /> Send via WhatsApp
                         </button>
@@ -132,17 +141,35 @@ const Quotation = () => {
                                         <th className="px-6 py-4 font-medium print:hidden">Image</th>
                                         <th className="px-6 py-4 font-medium print:py-2 print:px-2">Item Code</th>
                                         <th className="px-6 py-4 font-medium print:py-2 print:px-2">Category</th>
+                                        <th className="px-6 py-4 font-medium print:py-2 print:px-2">Specifications</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-border">
                                     {cart.map((item, index) => (
-                                        <tr key={item.id} className="bg-white print:border-b print:border-gray-200">
+                                        <tr key={item.cartId} className="bg-white print:border-b print:border-gray-200">
                                             <td className="px-6 py-4 print:py-2 print:px-2">{index + 1}</td>
                                             <td className="px-6 py-4 print:hidden">
                                                 <img src={item.image} alt={item.code} className="h-12 w-12 object-cover rounded-md" />
                                             </td>
                                             <td className="px-6 py-4 font-medium print:py-2 print:px-2">{item.code}</td>
                                             <td className="px-6 py-4 text-muted-foreground print:py-2 print:px-2 print:text-black">{item.category}</td>
+                                            <td className="px-6 py-4 print:py-2 print:px-2 whitespace-pre-wrap">
+                                                {item.preference && (
+                                                    <div className="text-xs font-semibold text-primary mb-1">{item.preference} Setting</div>
+                                                )}
+                                                {item.addons && item.addons.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {item.addons.map(id => (
+                                                            <span key={id} className="inline-block bg-slate-100 px-2 py-0.5 rounded text-[10px] text-slate-600 border border-slate-200">
+                                                                {addonOptions.find(a => a.id === id)?.label || id}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                {!item.preference && (!item.addons || item.addons.length === 0) && (
+                                                    <span className="text-muted-foreground italic text-xs">Standard</span>
+                                                )}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

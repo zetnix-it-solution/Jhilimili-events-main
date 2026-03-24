@@ -2,8 +2,9 @@ import { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, ShoppingBag, X, Check, ArrowRight, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { categories, decorationItems, DecorationCategory } from "@/data/decorations";
-import { useCart } from "@/contexts/CartContext";
+import { categories, decorationItems, DecorationCategory, addonOptions } from "@/data/decorations";
+import { useCart, CartItem } from "@/contexts/CartContext";
+import ProductPreferenceModal from "@/components/ProductPreferenceModal";
 
 interface CustomerDetails {
     name: string;
@@ -20,6 +21,11 @@ const Decorations = () => {
     const [customerDetails, setCustomerDetails] = useState<CustomerDetails>({
         name: "", phone: "", email: "", eventType: "", eventDate: ""
     });
+    
+    // Preference Modal State
+    const [isPreferenceModalOpen, setIsPreferenceModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<any>(null);
+
     const navigate = useNavigate();
 
     const filteredItems = activeCategory === "All"
@@ -35,6 +41,22 @@ const Decorations = () => {
         sessionStorage.setItem("jhilimili_customer", JSON.stringify(customerDetails));
         setIsCartOpen(false);
         navigate("/quotation");
+    };
+
+    const handleAddToCartClick = (item: any) => {
+        if (item.category === "Stage Decor") {
+            setSelectedItem(item);
+            setIsPreferenceModalOpen(true);
+        } else {
+            addToCart(item);
+        }
+    };
+
+    const handlePreferenceAdd = (preference: "Indoor" | "Outdoor", addons: string[]) => {
+        if (selectedItem) {
+            addToCart(selectedItem, preference, addons);
+            setIsPreferenceModalOpen(false);
+        }
     };
 
     return (
@@ -119,14 +141,14 @@ const Decorations = () => {
                                         {cart.find(c => c.id === item.id) ? (
                                             <button
                                                 disabled
-                                                className="w-full py-2.5 rounded-md text-sm font-medium bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] flex items-center justify-center gap-2 transition-colors cursor-default"
+                                                className="w-full py-2.5 rounded-full text-sm font-medium bg-soft-pink text-primary border border-primary/20 flex items-center justify-center gap-2 transition-colors cursor-default"
                                             >
                                                 <Check size={16} strokeWidth={2.5} /> Added
                                             </button>
                                         ) : (
                                             <button
-                                                onClick={() => addToCart(item)}
-                                                className="w-full py-2.5 rounded-md text-sm font-medium bg-[#D9A05B] hover:bg-[#c28f51] text-white flex items-center justify-center gap-2 transition-colors shadow-sm"
+                                                onClick={() => handleAddToCartClick(item)}
+                                                className="w-full py-2.5 rounded-full text-sm font-medium gradient-primary text-white flex items-center justify-center gap-2 transition-all shadow-md hover:scale-105 active:scale-95"
                                             >
                                                 <ShoppingCart size={16} /> Add to Cart
                                             </button>
@@ -169,7 +191,7 @@ const Decorations = () => {
                                             <ArrowLeft size={20} />
                                         </button>
                                     ) : (
-                                        <ShoppingBag className="text-[#D9A05B]" />
+                                        <ShoppingBag className="text-primary" />
                                     )}
                                     {cartStep === "form" ? "Your Details" : "My Quotation Cart"}
                                 </h2>
@@ -192,7 +214,7 @@ const Decorations = () => {
                                             <p>Your quotation cart is empty.</p>
                                             <button
                                                 onClick={() => setIsCartOpen(false)}
-                                                className="text-[#D9A05B] font-medium mt-2 hover:underline"
+                                                className="text-primary font-medium mt-2 hover:underline"
                                             >
                                                 Browse Decorations
                                             </button>
@@ -205,16 +227,34 @@ const Decorations = () => {
                                                     initial={{ opacity: 0, y: 10 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     exit={{ opacity: 0, scale: 0.95 }}
-                                                    key={item.id}
-                                                    className="flex gap-4 p-3 border border-border rounded-lg bg-card items-center"
+                                                    key={item.cartId}
+                                                    className="flex gap-4 p-3 border border-border rounded-lg bg-card items-center relative overflow-hidden group"
                                                 >
                                                     <img src={item.image} alt={item.code} className="w-20 h-20 object-cover rounded-md" />
-                                                    <div className="flex-1">
-                                                        <h4 className="font-bold text-foreground">{item.code}</h4>
-                                                        <p className="text-xs text-muted-foreground">{item.category}</p>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="font-bold text-foreground truncate">{item.code}</h4>
+                                                        <p className="text-xs text-muted-foreground mb-1">{item.category}</p>
+                                                        
+                                                        {(item.preference || (item.addons && item.addons.length > 0)) && (
+                                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                                {item.preference && (
+                                                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 text-[10px] font-medium text-slate-600 border border-slate-200">
+                                                                        {item.preference}
+                                                                    </span>
+                                                                )}
+                                                                {item.addons?.map(addonId => {
+                                                                    const addon = addonOptions.find(a => a.id === addonId);
+                                                                    return (
+                                                                        <span key={addonId} className="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-50 text-[10px] font-medium text-amber-600 border border-amber-100">
+                                                                            + {addon?.label || addonId}
+                                                                        </span>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <button
-                                                        onClick={() => removeFromCart(item.id)}
+                                                        onClick={() => removeFromCart(item.cartId)}
                                                         className="p-2 text-destructive hover:bg-destructive/10 rounded-full transition-colors"
                                                         aria-label="Remove item"
                                                     >
@@ -233,7 +273,7 @@ const Decorations = () => {
                                                 required
                                                 value={customerDetails.name}
                                                 onChange={(e) => setCustomerDetails({ ...customerDetails, name: e.target.value })}
-                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-[#D9A05B]"
+                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
                                                 placeholder="Your Full Name"
                                             />
                                         </div>
@@ -244,7 +284,7 @@ const Decorations = () => {
                                                 required
                                                 value={customerDetails.phone}
                                                 onChange={(e) => setCustomerDetails({ ...customerDetails, phone: e.target.value })}
-                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-[#D9A05B]"
+                                                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
                                                 placeholder="Your Phone Number"
                                             />
                                         </div>
@@ -299,7 +339,7 @@ const Decorations = () => {
                                         <button
                                             disabled={cart.length === 0}
                                             onClick={handleRequestQuotation}
-                                            className="w-full py-4 rounded-md text-white font-medium bg-[#D9A05B] hover:bg-[#c28f51] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 transition-colors shadow-md"
+                                            className="w-full py-4 rounded-full text-white font-medium gradient-primary disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
                                         >
                                             Request Custom Quotation <ArrowRight size={18} />
                                         </button>
@@ -308,7 +348,7 @@ const Decorations = () => {
                                     <button
                                         type="submit"
                                         form="quotation-form"
-                                        className="w-full py-4 rounded-md text-white font-medium bg-[#D9A05B] hover:bg-[#c28f51] flex justify-center items-center gap-2 transition-colors shadow-md"
+                                        className="w-full py-4 rounded-full text-white font-medium gradient-primary flex justify-center items-center gap-2 transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
                                     >
                                         Generate Quotation <ArrowRight size={18} />
                                     </button>
@@ -318,6 +358,13 @@ const Decorations = () => {
                     </>
                 )}
             </AnimatePresence>
+
+            <ProductPreferenceModal
+                isOpen={isPreferenceModalOpen}
+                onClose={() => setIsPreferenceModalOpen(false)}
+                item={selectedItem}
+                onAdd={handlePreferenceAdd}
+            />
         </div>
     );
 };

@@ -3,10 +3,14 @@ import { DecorationItem } from "@/data/decorations";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckCircle2 } from "lucide-react";
 
+export interface CartItem extends DecorationItem {
+    cartId: string;
+}
+
 interface CartContextType {
-    cart: DecorationItem[];
-    addToCart: (item: DecorationItem) => void;
-    removeFromCart: (id: string) => void;
+    cart: CartItem[];
+    addToCart: (item: DecorationItem, preference?: "Indoor" | "Outdoor", addons?: string[]) => void;
+    removeFromCart: (cartId: string) => void;
     clearCart: () => void;
     isCartOpen: boolean;
     setIsCartOpen: (isOpen: boolean) => void;
@@ -15,9 +19,22 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-    const [cart, setCart] = useState<DecorationItem[]>(() => {
+    const [cart, setCart] = useState<CartItem[]>(() => {
         const saved = sessionStorage.getItem("jhilimili_cart");
-        return saved ? JSON.parse(saved) : [];
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // Ensure all items have a cartId for backwards compatibility
+                return parsed.map((item: any) => ({
+                    ...item,
+                    cartId: item.cartId || item.id
+                }));
+            } catch (e) {
+                console.error("Error parsing cart from session storage", e);
+                return [];
+            }
+        }
+        return [];
     });
     const [isCartOpen, setIsCartOpen] = useState(false);
     const { toast } = useToast();
@@ -27,29 +44,34 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         sessionStorage.setItem("jhilimili_cart", JSON.stringify(cart));
     }, [cart]);
 
-    const addToCart = useCallback((item: DecorationItem) => {
+    const addToCart = useCallback((item: DecorationItem, preference?: "Indoor" | "Outdoor", addons?: string[]) => {
+        const cartId = `${item.id}-${preference || "default"}-${(addons || []).sort().join(",")}`;
+        
         setCart((prev) => {
-            if (!prev.find(c => c.id === item.id)) {
+            if (!prev.find(c => c.cartId === cartId)) {
                 toast({
                     title: (
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
                             <span>Added to Quote</span>
                         </div>
-                    ) as any, // Cast to any to bypass strict type checking for ReactNode in this specific Shadcn setup
+                    ) as any,
                     description: (
-                        <span className="ml-7 block">{item.code} has been added to your quotation request.</span>
+                        <div className="ml-7 space-y-1">
+                            <span className="block font-medium">{item.code} has been added.</span>
+                            {preference && <span className="block text-xs text-muted-foreground italic">({preference} setting)</span>}
+                        </div>
                     ) as any,
                     duration: 3000,
                 });
-                return [...prev, item];
+                return [...prev, { ...item, cartId, preference, addons }];
             }
             return prev;
         });
     }, [toast]);
 
-    const removeFromCart = useCallback((id: string) => {
-        setCart((prev) => prev.filter(item => item.id !== id));
+    const removeFromCart = useCallback((cartId: string) => {
+        setCart((prev) => prev.filter(item => item.cartId !== cartId));
     }, []);
 
     const clearCart = useCallback(() => {

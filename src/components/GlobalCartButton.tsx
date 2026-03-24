@@ -32,7 +32,7 @@ const GlobalCartButton = () => {
             >
                 <div className="relative">
                     <ShoppingBag size={24} />
-                    <span className="absolute -top-2 -right-2 bg-[#D9A05B] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                    <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
                         {cart.length}
                     </span>
                 </div>

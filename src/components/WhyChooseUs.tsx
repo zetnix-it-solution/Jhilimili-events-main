@@ -50,10 +50,10 @@ const WhyChooseUs = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.12, duration: 0.5, ease: "easeOut" }}
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#f0fdfa] p-7 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500"
+              className="group relative overflow-hidden rounded-2xl bg-white border border-slate-100 p-7 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500"
             >
               {/* Decorative circle */}
-              <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-gradient-to-br from-primary/8 to-secondary/8 group-hover:from-primary/15 group-hover:to-secondary/15 transition-all duration-500" />
+              <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-slate-50 group-hover:bg-primary/5 transition-all duration-500" />
 
               {/* Icon */}
               <div className="relative w-14 h-14 rounded-2xl bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-105">

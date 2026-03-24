@@ -1,4 +1,4 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Heart, Building2, Cake, Diamond, Palmtree, ArrowUpRight } from "lucide-react";
@@ -19,6 +19,7 @@ const services = [
 const ServicesPreview = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <section className="section-padding bg-background" ref={ref}>
@@ -38,7 +39,7 @@ const ServicesPreview = () => {
           {services.map((service, i) => (
             <motion.div
               key={service.title}
-              initial={{ opacity: 0, y: 40 }}
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
               className="group relative rounded-2xl overflow-hidden bg-card border border-border/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col"

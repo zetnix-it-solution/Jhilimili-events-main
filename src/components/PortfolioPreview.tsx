@@ -1,4 +1,4 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { X } from "lucide-react";
@@ -31,6 +31,7 @@ const PortfolioPreview = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [activeCategory, setActiveCategory] = useState<Category>("All");
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const filteredImages = useMemo(
     () => (activeCategory === "All" ? images : images.filter((img) => img.category === activeCategory)),
@@ -38,7 +39,7 @@ const PortfolioPreview = () => {
   );
 
   return (
-    <section className="section-padding bg-soft-pink" ref={ref}>
+    <section className="section-padding bg-[#fcf9f9]" ref={ref}>
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -51,50 +52,55 @@ const PortfolioPreview = () => {
           <div className="w-20 h-0.5 gradient-primary mx-auto" />
         </motion.div>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full text-xs md:text-sm font-medium tracking-wide transition-all ${
+              className={`px-6 py-2.5 rounded-full text-xs md:text-sm font-semibold tracking-wider transition-all duration-300 ${
                 activeCategory === cat
-                  ? "gradient-primary text-primary-foreground shadow-md"
-                  : "bg-background text-muted-foreground hover:text-foreground"
+                  ? "gradient-primary text-white shadow-[0_5px_15px_rgba(217,160,91,0.2)]"
+                  : "bg-white text-slate-500 border border-slate-100 hover:border-primary/30 hover:text-primary"
               }`}
             >
-              {cat}
+              {cat.toUpperCase()}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredImages.map((img, i) => (
             <motion.div
+              layout={!shouldReduceMotion}
               key={`${img.src}-${activeCategory}`}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: i * 0.08, duration: 0.4 }}
-              className={`image-hover-zoom rounded-lg overflow-hidden ${
-                i % 5 === 0 ? "row-span-2" : ""
-              } cursor-pointer`}
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.05, duration: 0.5 }}
+              className={`group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500`}
               onClick={() => setLightbox(img.src)}
             >
               <img
                 src={img.src}
                 alt={img.alt}
-                className="w-full h-full object-cover min-h-[200px]"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 loading="lazy"
               />
+              {/* Overlay with details */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 translate-y-4 group-hover:translate-y-0 text-white">
+                <p className="text-[10px] uppercase tracking-[0.3em] font-medium mb-1 text-accent">{img.category}</p>
+                <h4 className="font-heading text-lg font-bold">{img.alt}</h4>
+                <div className="w-8 h-0.5 bg-accent mt-3 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              </div>
             </motion.div>
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-16">
           <Link
             to="/portfolio"
-            className="gradient-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block"
+            className="inline-flex items-center justify-center border-b-2 border-primary text-foreground px-2 py-1 font-bold tracking-widest hover:text-primary hover:border-accent transition-all duration-300"
           >
-            View Full Gallery
+            VIEW FULL GALLERY
           </Link>
         </div>
 

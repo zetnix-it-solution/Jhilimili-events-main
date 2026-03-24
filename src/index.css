@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Cinzel:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Cinzel:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -50,7 +50,10 @@
 
     --font-heading: 'Playfair Display', serif;
     --font-display: 'Cinzel', serif;
-    --font-body: 'Poppins', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+
+    --surface-1: 330 30% 98%;
+    --surface-2: 183 30% 98%;
   }
 
   * {
@@ -77,11 +80,15 @@
   }
 
   .glass-card {
-    @apply bg-card/80 backdrop-blur-md border border-border/50 shadow-lg;
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl;
+  }
+
+  .glass-card-dark {
+    @apply bg-foreground/5 backdrop-blur-md border border-white/10 shadow-xl rounded-3xl;
   }
 
   .section-padding {
-    @apply py-20 md:py-28 px-4;
+    @apply py-24 md:py-32 px-4;
   }
 
   .container-custom {
@@ -117,5 +124,31 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-float-delayed {
+    animation: float 8s ease-in-out infinite 1s;
+    will-change: transform;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+    50% { transform: translate3d(0, -20px, 0) rotate(2deg); }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 }

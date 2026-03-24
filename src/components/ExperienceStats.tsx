@@ -6,7 +6,7 @@ const stats = [
     { icon: Calendar, label: "Events Planned", value: "500+", color: "bg-primary/10 text-primary" },
     { icon: Users, label: "Happy Clients", value: "450+", color: "bg-secondary/10 text-secondary" },
     { icon: Award, label: "Years Experience", value: "10+", color: "bg-accent/10 text-accent" },
-    { icon: MapPin, label: "Locations", value: "25+", color: "bg-pink-100 text-pink-600" },
+    { icon: MapPin, label: "Locations", value: "5+", color: "bg-pink-100 text-pink-600" },
 ];
 
 const ExperienceStats = () => {

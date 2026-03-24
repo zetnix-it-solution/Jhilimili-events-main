@@ -8,10 +8,21 @@ import ExperienceStats from "@/components/ExperienceStats";
 import ProcessSection from "@/components/ProcessSection";
 import FloatingElements from "@/components/FloatingElements";
 import SectionDivider from "@/components/SectionDivider";
+import InteractiveVision from "@/components/InteractiveVision";
+import FAQSection from "@/components/FAQSection";
+import Newsletter from "@/components/Newsletter";
+import { useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const Index = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <FloatingElements />
       
       <HeroSection />
@@ -19,14 +30,19 @@ const Index = () => {
       <SectionDivider variant="dots" />
       <ServicesPreview />
       <SectionDivider />
-      <ProcessSection />
+      <InteractiveVision />
       <SectionDivider variant="wave" />
-      <PortfolioPreview />
+      <ProcessSection />
       <SectionDivider />
-      <WhyChooseUs />
+      <PortfolioPreview />
       <SectionDivider variant="dots" />
+      <WhyChooseUs />
+      <SectionDivider />
+      <FAQSection />
+      <SectionDivider variant="wave" />
       <Testimonials />
       <SectionDivider />
+      <Newsletter />
       <ContactCTA />
     </div>
   );

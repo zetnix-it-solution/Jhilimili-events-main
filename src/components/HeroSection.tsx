@@ -1,24 +1,37 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import heroImage from "@/assets/hero-wedding.jpg";
 
 const HeroSection = () => {
   const shouldReduceMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  
+  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+  const rotate = useTransform(scrollY, [0, 1000], [0, 45]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
-        style={{ backgroundImage: `url(${heroImage})` }}
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
+        style={{ 
+          backgroundImage: `url(${heroImage})`,
+          y: shouldReduceMotion ? 0 : y1 
+        }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-foreground/85 via-foreground/70 to-foreground/80" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(255,214,173,0.15),transparent_42%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground/85 via-foreground/60 to-foreground/90" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(255,214,173,0.12),transparent_42%)]" />
 
-      {/* Decorative Mandala SVGs */}
+      {/* Decorative Mandala SVGs with parallax */}
       <motion.div 
+        style={{ 
+          rotate: shouldReduceMotion ? 0 : rotate,
+          y: shouldReduceMotion ? 0 : y2
+        }}
         animate={{ rotate: 360 }}
-        transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-        className="absolute -top-32 -right-32 w-96 h-96 opacity-10 pointer-events-none"
+        transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+        className="absolute -top-32 -right-32 w-[500px] h-[500px] opacity-[0.08] pointer-events-none"
       >
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="text-white fill-none stroke-current stroke-[0.5]">
           <circle cx="100" cy="100" r="90" />
@@ -96,6 +109,7 @@ const HeroSection = () => {
 
         {/* Scroll Indicator */}
         <motion.div
+           style={{ opacity }}
            initial={{ opacity: 0 }}
            animate={{ opacity: 1 }}
            transition={{ delay: 1.5, duration: 1 }}

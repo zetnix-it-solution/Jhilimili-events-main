@@ -122,7 +122,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-medium text-foreground">Phone</h4>
-                    <p className="text-muted-foreground">+977-9800000000</p>
+                    <p className="text-muted-foreground">+977-9855046196</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -140,7 +140,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-medium text-foreground">Office</h4>
-                    <p className="text-muted-foreground">Kathmandu, Nepal</p>
+                    <p className="text-muted-foreground">Bharatpur, Nepal</p>
                   </div>
                 </div>
               </div>

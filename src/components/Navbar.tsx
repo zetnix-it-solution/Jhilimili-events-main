@@ -96,12 +96,6 @@ const Navbar = () => {
           ))}
           <div className="flex items-center gap-3 ml-2">
             <Link
-              to="/decorations"
-              className="gradient-primary text-white px-5 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-all duration-300 shadow-md"
-            >
-              Plan Your Event
-            </Link>
-            <Link
               to="/contact"
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${showSolidNav
                 ? "border-primary text-primary hover:bg-primary hover:text-white"
@@ -180,15 +174,6 @@ const Navbar = () => {
                   }}
                   className="mt-4 flex flex-col gap-4 w-full px-10"
                 >
-                  <Link
-                    to="/decorations"
-                    className="w-full text-center px-8 py-3.5 rounded-full text-lg font-medium text-white hover:opacity-90 transition-opacity duration-200"
-                    style={{
-                      background: "linear-gradient(135deg, #C2187A, #1BA6B2)"
-                    }}
-                  >
-                    Plan Your Event
-                  </Link>
                   <Link
                     to="/contact"
                     className="w-full text-center px-8 py-3.5 rounded-full text-lg font-medium border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200"

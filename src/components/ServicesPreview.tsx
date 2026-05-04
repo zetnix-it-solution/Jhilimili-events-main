@@ -9,11 +9,11 @@ import engagement from "@/assets/engagement.jpg";
 import destinationWedding from "@/assets/destination-wedding.jpg";
 
 const services = [
-  { icon: Heart, title: "Wedding Planning", description: "Complete wedding management from venue to vows", image: heroWedding },
-  { icon: Building2, title: "Corporate Events", description: "Professional events that leave lasting impressions", image: corporateEvent },
-  { icon: Cake, title: "Birthday Celebrations", description: "Magical birthday parties for all ages", image: birthdayParty },
-  { icon: Diamond, title: "Engagement", description: "Romantic engagement ceremonies to remember", image: engagement },
-  { icon: Palmtree, title: "Destination Wedding", description: "Dream weddings in Nepal's breathtaking locations", image: destinationWedding },
+  { slug: "wedding-planning", icon: Heart, title: "Wedding Planning", description: "Complete wedding management from venue to vows", image: heroWedding },
+  { slug: "corporate-events", icon: Building2, title: "Corporate Events", description: "Professional events that leave lasting impressions", image: corporateEvent },
+  { slug: "birthday-celebrations", icon: Cake, title: "Birthday Celebrations", description: "Magical birthday parties for all ages", image: birthdayParty },
+  { slug: "engagement", icon: Diamond, title: "Engagement", description: "Romantic engagement ceremonies to remember", image: engagement },
+  { slug: "destination-wedding", icon: Palmtree, title: "Destination Wedding", description: "Dream weddings in Nepal's breathtaking locations", image: destinationWedding },
 ];
 
 const ServicesPreview = () => {
@@ -75,7 +75,7 @@ const ServicesPreview = () => {
                   {service.description}
                 </p>
                 <Link
-                  to="/services"
+                  to={`/portfolio/${service.slug}`}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-secondary transition-colors duration-300"
                 >
                   Explore

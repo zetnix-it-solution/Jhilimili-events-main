@@ -94,12 +94,6 @@ const HeroSection = () => {
           className="flex flex-col sm:flex-row gap-5 justify-center mt-4"
         >
           <Link
-            to="/decorations"
-            className="gradient-primary text-white px-10 py-4 rounded-full text-lg font-bold hover:scale-105 transition-all shadow-[0_10px_30px_rgba(217,160,91,0.3)] shimmer group overflow-hidden relative"
-          >
-            <span className="relative z-10">Plan Your Event</span>
-          </Link>
-          <Link
             to="/contact"
             className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-10 py-4 rounded-full text-lg font-semibold hover:bg-white/20 hover:scale-105 transition-all shadow-lg"
           >

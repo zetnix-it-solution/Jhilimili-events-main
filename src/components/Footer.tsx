@@ -65,7 +65,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-sm text-primary-foreground/70">
                 <Phone size={16} className="text-primary shrink-0" />
-                +977-9800000000
+                +977-9855046196
               </li>
               <li className="flex items-center gap-3 text-sm text-primary-foreground/70">
                 <Mail size={16} className="text-secondary shrink-0" />
@@ -73,7 +73,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-3 text-sm text-primary-foreground/70">
                 <MapPin size={16} className="text-accent shrink-0 mt-0.5" />
-                Kathmandu, Nepal
+                Bharatpur, Nepal
               </li>
             </ul>
             <div className="flex gap-4 mt-6">
